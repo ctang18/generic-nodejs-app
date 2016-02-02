@@ -1,15 +1,13 @@
-<!-- index.html -->
-<!doctype html>
+<!doctype HTML>
 <html lang="en">
   <head>
     <title>Generic NodeJS App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
   </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS -->
   <body>
-      <div class="container">
-
+    <div class="container">
       <div class="header">
         <div class="header-left desktop">
           <ul>
@@ -27,19 +25,16 @@
           <div class="subtitle">beta</div>
         </div>
       </div><!-- header -->
-      
-      <div class="contents" ng-controller="mainController">
-        <div class="post-iota">
-          <textarea class="post-iota-field"></textarea>
-          <span id="post-iota-button" class="genericon genericon-plus hover-pink post-iota-button" onclick="postIotaBox()"></span>
-          <span id="confirm-iota-button" class="hover-solid post-iota-button" onclick="confirmIota()"><strong>Save</strong></span>
-        </div>
-              <!-- LOOP OVER THE TODOS IN $scope.contents -->
-              <content-item ng-repeat="content in contents" content="content" class="content-box" ng-class="{true: 'content-half', false: 'content-full'}[content.half]"></content-item>       
+      <div class="post-iota">
+        <textarea class="post-iota-field"></textarea>
+        <span id="post-iota-button" class="genericon genericon-plus hover-pink post-iota-button" onclick="postIotaBox()"></span>
+        <span id="confirm-iota-button" class="hover-solid post-iota-button" onclick="confirmIota()"><strong>Save</strong></span>
+      </div>   
+      <div class="contents">
       </div><!-- contents -->'
       <br />
       <div class="loading hidden">loading content...</div>
-    </div>
+    </div><!-- container -->'
   </body>
   <script src="js/lib/jquery.min.js"></script>
   <script src="js/index.js"></script>
