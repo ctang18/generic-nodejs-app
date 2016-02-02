@@ -1,12 +1,13 @@
 /* Modules */
 var express = require('express');
+var path = require('path');
 var app = express();
 var http = require('http').Server(app);
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
 
 var c = require('./config.json');
 var model = require('./js/model.js');
@@ -15,7 +16,8 @@ var contentHelper = require('./js/content.js');
 var port = process.env.PORT || c.port;
 
 /* Configuration */
-app.use(express.static(__dirname + '/../client'));
+app.use('/static', express.static(__dirname + '/../client'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
@@ -42,11 +44,15 @@ app.post('/api/content', function(req, res) {
 
 /* Router */
 app.get('/', function(req, res){
-  res.sendfile('index.html');
+  if(req.user) {
+    res.sendFile('index.html');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.get('/register', function(req, res) {
-  res.sendfile('register.html');
+  res.sendFile(path.join(__dirname + '/../client/register.html'));
 });
 
 app.post('/register', function(req, res) {
@@ -60,7 +66,7 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-  res.sendfile('register.html');
+  res.sendFile(path.join(__dirname + '/../client/login.html'));
 });
 
 app.post('/login', passport.authenticate('local'), function(req, res, next) {

@@ -7,6 +7,7 @@ Generic NodeJS, Express, MongoDB setup for quick development. Intended for perso
 
 ## To Do
 - Move routing code to routes.js
+- Split model.js into one js file for each schema
 - Implement Passport
 - Implement Jsonwebtoken
 - Design a demo for display purposes
