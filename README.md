@@ -4,12 +4,11 @@ Generic NodeJS, Express, MongoDB setup for quick development. Intended for perso
 ## Frameworks
 - Express
 - Mongoose
+- Passport
+- Jsonwebtoken
 
 ## To Do
 - Move routing code to routes.js
-- Split model.js into one js file for each schema
-- Implement Passport
-- Implement Jsonwebtoken
 - Design a demo for display purposes
 - Create a script that will build a project based on desired frameworks and technology (Backbone/Angular/None, MongoDB/MySQL, Cookies/Sessions/Tokens)
 

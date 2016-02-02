@@ -1,4 +1,5 @@
 {
     "port": 3001,
-    "mongoURI": "mongodb://localhost/newapp"
+    "mongoURI": "mongodb://localhost/newapp",
+    "jwtSecret": "lmaodeeznutslmaolmao"
 }
