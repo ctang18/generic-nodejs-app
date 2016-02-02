@@ -6,7 +6,6 @@ Generic NodeJS, Express, MongoDB setup for quick development. Intended for perso
 - Mongoose
 
 ## To Do
-- Pass in MongoDB URI from config.json to models.js
 - Move routing code to routes.js
 - Implement Passport
 - Implement Jsonwebtoken

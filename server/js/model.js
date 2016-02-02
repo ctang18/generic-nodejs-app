@@ -1,9 +1,5 @@
 var mongoose = require('mongoose');
 
-//figure out how to get uri string from server.js
-var uriString = process.env.MONGOLAB_URI || 'mongodb://localhost/newapp'
-var connection = mongoose.createConnection(uriString);
-
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
 
@@ -19,7 +15,7 @@ var contentSchema = new Schema({
 });
 
 /* Content */
-var Content = connection.model('Content', contentSchema);
+var Content = mongoose.model('Content', contentSchema);
 var ContentProvider = function(){};
 
 // Create and save new content
@@ -73,4 +69,10 @@ exports.ContentProvider = ContentProvider;
 // Convert errors into human readable messages
 function handleError(err){
   return err;
+}
+
+// Add hours
+function addHours(time, hours){
+  var date = new Date(time);
+  return date.setHours(date.getHours() + hours);
 }

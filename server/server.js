@@ -3,9 +3,10 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
-var model = require('./js/model.js');
 var c = require('./config.json');
+var model = require('./js/model.js');
 
 var port = process.env.PORT || c.port;
 
@@ -13,6 +14,9 @@ var port = process.env.PORT || c.port;
 app.use(express.static(__dirname + '/../client'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
+
+
 
 var contentProvider = new model.ContentProvider;
 
@@ -38,7 +42,7 @@ app.get('/', function(req, res){
   res.sendfile('index.html');
 });
 
-// Create fake content for demoing purposes
+//Create fake content for demoing purposes
 app.get('/demo', function(req, res){
   var startDate = new Date(Date.now());
   var endDate = new Date(Date.now());
@@ -68,7 +72,6 @@ app.get('*', function(req, res){
 });
 
 /* Application */
-
 http.listen(port, function(){
   console.log('listening on localhost:' + port);
 });
