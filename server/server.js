@@ -4,9 +4,13 @@ var app = express();
 var http = require('http').Server(app);
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 
 var c = require('./config.json');
 var model = require('./js/model.js');
+var contentHelper = require('./js/content.js');
 
 var port = process.env.PORT || c.port;
 
@@ -16,25 +20,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
 
-
-
-var contentProvider = new model.ContentProvider;
+var ContentProvider = model.ContentProvider;
+var Account = model.User;
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 /* API */
 app.get('/api/content', function(req, res){
-  contentProvider.getContent(Date.now(), function(err, currentContent, upcomingContent, missedContent) {
-    if(err){
-      res.json({success: false});
-    } else {
-      var result = {
-        success         : true, 
-        currentContent  : currentContent,
-        upcomingContent : upcomingContent, 
-        missedContent  : missedContent
-      };
-      res.json(result);
-    }  
+  ContentProvider.findContents(req.user._id, function(err, contents){
+    if (err)
+      res.send(err)
+
+    res.json(contents); 
   });
+});
+
+app.post('/api/content', function(req, res) {
+  
 });
 
 /* Router */
@@ -42,36 +45,39 @@ app.get('/', function(req, res){
   res.sendfile('index.html');
 });
 
-//Create fake content for demoing purposes
-app.get('/demo', function(req, res){
-  var startDate = new Date(Date.now());
-  var endDate = new Date(Date.now());
-  //startDate.setHours(startDate.getHours() + 2);
-  endDate.setHours(endDate.getHours() + 1);
-  var content = {
-    title    : "Steelers @ Broncos",
-    start    : startDate,
-    end      : endDate,
-    networks : ["CBS"],
-    streams  : [],
-    hashtags : ["#PITatDEN", "#Broncos", "#Steelers"],
-    image    : "demo/1.jpg"
-  };
-  
-  contentProvider.createContent(content, function(err){
-    if(err){
-      res.json({success: false, err: err});
+app.get('/register', function(req, res) {
+  res.sendfile('register.html');
+});
+
+app.post('/register', function(req, res) {
+  Account.register(new Account({ username : req.body.email }), req.body.password, function(err, account) {
+    if (err) {
+        res.json({success: false, reason: err});
     } else {
       res.json({success: true});
     }
   });
 });
 
+app.get('/login', function(req, res) {
+  res.sendfile('register.html');
+});
+
+app.post('/login', passport.authenticate('local'), function(req, res, next) {
+  //TODO Send back errors
+  res.redirect('/');
+});
+
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
 app.get('*', function(req, res){
   res.redirect('/')
 });
 
-/* Application */
+/* Listen */
 http.listen(port, function(){
   console.log('listening on localhost:' + port);
 });

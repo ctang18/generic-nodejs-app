@@ -1,78 +1,64 @@
-var mongoose = require('mongoose');
-
-var Schema = mongoose.Schema
-  , ObjectId = Schema.ObjectId;
+var mongoose = require('mongoose'),
+    passportLocalMongoose = require('passport-local-mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 /* Schemas */
-var contentSchema = new Schema({
-  title : String,
-  start: Date,
-  end: Date,
-  networks : [String],
-  streams : [String],
-  hashtags : [String],
-  image : String
+var userSchema = new Schema({
+    verified : { type: Boolean, default: false},
+    onboard  : { type: Boolean, default: true}
 });
+
+var contentSchema = new Schema({
+    userid     : ObjectId,
+    content    : String,
+    original   : String,
+    embed      : String,
+    title      : String,
+    img        : String,
+    type       : String,
+    half       : Boolean,
+    postdate   : { type: Date, default: Date.now },
+    lastupdate : { type: Date, default: Date.now }
+});
+
+userSchema.plugin(passportLocalMongoose);
+var User = mongoose.model('User', userSchema)
 
 /* Content */
 var Content = mongoose.model('Content', contentSchema);
 var ContentProvider = function(){};
 
-// Create and save new content
-ContentProvider.prototype.createContent = function(params, cb) {
-  var content  = new Content({
-    title    : params['title'],
-    start    : params['start'],
-    end      : params['end'],
-    networks : params['networks'],
-    streams  : params['streams'],
-    hashtags : params['hashtags'],
-    image    : params['image']
-  });
-  
-  content.save(function(err){
-    return cb(err);
-  });
+ContentProvider.prototype.findContents = function(userid, callback) {
+    console.log('Finding ' + userid);
+    Content.find({ 'userid': userid }).sort({postdate: -1}).exec(function(err, contents) {
+        callback(err, contents);
+    });
 };
 
-// Get current, upcoming, and missed content
-ContentProvider.prototype.getContent = function(datetime, cb) {
-  Content.find({ '$and': [{ end: { '$gt': datetime } },{ start: { '$lt': datetime } } ] }).exec(function(err, currentContent) {
-		if(err) return cb(err)
-    else {
-			Content.find({ start: { '$gt': datetime }}).exec(function(err, upcomingContent) {
-				if(err) return cb(err)
-        else {
-					Content.find({ end: { '$lt': datetime } }).exec(function(err, missedContent) {
-						return cb(err, currentContent, upcomingContent, missedContent);
-					});
-				}
-			});
-		}
-	});
+ContentProvider.prototype.save = function(params, callback) {
+    var content  = new Content({
+        userid     : params['userid'],
+        content    : params['content'],
+        embed      : params['embed'],
+        title      : params['title'],
+        img        : params['img'],
+        type       : params['type'],
+        half       : params['half']
+    });
+    content.save(function(err){
+        console.log(err);
+        callback(err);
+    });
 };
 
-// Purge content older than 12 hours
-ContentProvider.prototype.purgeContent = function(cb) {
-  console.log("Purging Content");
-  Content.remove({ end: { '$lt': addHours(Date.now(), -12) } }, function(err){
-    if (err) return handleError(err);
-    return cb(null);
-  });
-  console.log("Purged Content");
+ContentProvider.prototype.remove = function(params, callback) {
+    Content.remove({_id : params['_id']}, function(err){
+        callback(err);
+    });
 };
 
+exports.User = User;
 exports.ContentProvider = ContentProvider;
 
 /* Helper Functions */
-
-// Convert errors into human readable messages
-function handleError(err){
-  return err;
-}
-
-// Add hours
-function addHours(time, hours){
-  var date = new Date(time);
-  return date.setHours(date.getHours() + hours);
-}
