@@ -10,10 +10,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var c = require('./config.json');
-var model = require('./js/model.js');
-var contentHelper = require('./js/content.js');
-
-var port = process.env.PORT || c.port;
+var ContentProvider = require('./models/content.js');
+var UserProvider = require('./models/user.js');
+var ContentHelper = require('./js/contentUtil.js');
 
 /* Configuration */
 app.use('/static', express.static(__dirname + '/../client'));
@@ -21,12 +20,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
-
-var ContentProvider = model.ContentProvider;
-var Account = model.User;
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.use(new LocalStrategy(UserProvider.authenticate()));
+passport.serializeUser(UserProvider.serializeUser());
+passport.deserializeUser(UserProvider.deserializeUser());
 
 /* API */
 app.get('/api/content', function(req, res){
@@ -56,7 +52,7 @@ app.get('/register', function(req, res) {
 });
 
 app.post('/register', function(req, res) {
-  Account.register(new Account({ username : req.body.email }), req.body.password, function(err, account) {
+  UserProvider.register(new UserProvider({ username : req.body.email }), req.body.password, function(err, account) {
     if (err) {
         res.json({success: false, reason: err});
     } else {
@@ -84,6 +80,6 @@ app.get('*', function(req, res){
 });
 
 /* Listen */
-http.listen(port, function(){
-  console.log('listening on localhost:' + port);
+http.listen((process.env.PORT || c.port), function(){
+  console.log('listening on localhost:' + (process.env.PORT || c.port));
 });
