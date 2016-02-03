@@ -24,15 +24,12 @@ app.use(passport.initialize());
 mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
 passport.use(new LocalStrategy(UserProvider.authenticate()));
 passport.use(new TokenStrategy(function (username, token, done) {
-  UserProvider.findOne({username: username}, function (err, user) {
+  UserProvider.findOne({ username: username }, function (err, user) {
     if (err) { return done(err); }
     if (!user) { return done(null, false); }
     jwt.verify(token, c.jwtSecret, function(err, decoded) {
-      if (err) {
-        //Handle expired tokens
-        return done(null, false);
-      }
-        return done(null, user);
+      if (err) { return done(null, false); }
+      return done(null, user);
     });
   });
 }));
