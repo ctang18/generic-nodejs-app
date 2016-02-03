@@ -10,7 +10,7 @@ Generic NodeJS, Express, MongoDB setup for quick development.
 ## To Do
 - Change references of username to email
 - Move routing code to routes.js
-- Design a demo for display purposes
+- Add posting to demo
 - Client and server side validation
 - Implement front-end framework (Backbone or Angular)
 - Create a script that will build a project based on desired frameworks and technology (Backbone/Angular/None, MongoDB/MySQL, Cookies/Sessions/Tokens)

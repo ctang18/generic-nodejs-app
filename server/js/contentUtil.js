@@ -5,8 +5,7 @@ var ContentPoster = function(){};
 
 /* Functions */
 ContentPoster.post = function(userid, stringlet) {
-  convertAndPostStringlet(userid, "Test");
-  convertAndPostStringlet(userid, "http://i.4cdn.org/sp/1454464610068.jpg");
+  convertAndPostStringlet(userid, stringlet);
 };
 
 /* Helper Functions */

@@ -27,8 +27,7 @@
       </div><!-- header -->
       <div class="post-iota">
         <textarea class="post-iota-field"></textarea>
-        <span id="post-iota-button" class="genericon genericon-plus hover-pink post-iota-button" onclick="postIotaBox()"></span>
-        <span id="confirm-iota-button" class="hover-solid post-iota-button" onclick="confirmIota()"><strong>Save</strong></span>
+        <a href="#"><input type="submit" class="pink-button" value="post"></a>
       </div>   
       <div class="contents" id="contents">
       </div><!-- contents -->'
@@ -72,13 +71,13 @@
     
     function renderContent(contents){
       var contentHTML = '';
-      
       for(i = 0; i < contents.length; i++){
         if(contents[i].type === 'STRING'){
-          contentHTML += '<div class="content-box"> <div class="content-iota">' + contents[i].content + '</div> </div>';
-        } 
-      }
-      
+          contentHTML += '<div class="content-box content-full"> <div class="content-iota">' + contents[i].content + '</div> </div>';
+        } else if (contents[i].type === 'IMAGE'){
+          contentHTML += '<div class="content-box content-half"> <div class="image-screen"></div> <img class="content-image" src="' + contents[i].content + '"> </div>'
+        }
+      } 
       return contentHTML;
     }
   </script>

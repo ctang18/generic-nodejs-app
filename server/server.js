@@ -14,7 +14,7 @@ var TokenStrategy = require('passport-token').Strategy;
 var c = require('./config.json');
 var ContentProvider = require('./models/content.js');
 var UserProvider = require('./models/user.js');
-var ContentHelper = require('./js/contentUtil.js');
+var ContentHelper = require('./js/contentutil.js');
 
 /* Configuration */
 app.use('/static', express.static(__dirname + '/../client'));
@@ -28,12 +28,8 @@ passport.serializeUser(UserProvider.serializeUser());
 passport.deserializeUser(UserProvider.deserializeUser());
 passport.use(new TokenStrategy(function (username, token, done) {
   UserProvider.findOne({username: username}, function (err, user) {
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      return done(null, false);
-    }
+    if (err) { return done(err); }
+    if (!user) { return done(null, false); }
     jwt.verify(token, c.jwtSecret, function(err, decoded) {
       if (err) {
         //Handle expired tokens
