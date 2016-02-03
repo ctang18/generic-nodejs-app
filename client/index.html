@@ -9,25 +9,19 @@
   <body>
     <div class="container">
       <div class="header">
-        <div class="header-left desktop">
-          <ul>
-            <li><a href="http://blog.iota.ly" class="hover-solid desktop">blog</a></li>
-          </ul>
-        </div>
         <div class="header-right">
           <ul>
             <li><a href="logout" class="hover-solid">logout</a></li>
-            <li><a href="http://blog.iota.ly" class="hover-solid mobile">blog</a></li>
           </ul>
         </div>
         <div class="header-center">
-          <div class="title"><a class="hover-pink" href="/">ιota</a></div>
+          <div class="title"><a class="hover-pink" href="/">placeholder</a></div>
           <div class="subtitle">beta</div>
         </div>
       </div><!-- header -->
       <div class="post-iota">
-        <textarea class="post-iota-field"></textarea>
-        <a href="#"><input type="submit" class="pink-button" value="post"></a>
+        <textarea id="postTextBox" class="post-iota-field"></textarea>
+        <button id="postButton" class="pink-button">post</button>
       </div>   
       <div class="contents" id="contents">
       </div><!-- contents -->'
@@ -80,5 +74,16 @@
       } 
       return contentHTML;
     }
+    
+    $('#postButton').click(function (e) {
+      var text = $('#postTextBox').val();
+      
+      e.preventDefault();
+      $.post('api/content', {
+        text: text
+      }).done(function (result) {
+        window.location.replace('/');
+      });
+    });
   </script>
 </html>

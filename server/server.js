@@ -55,6 +55,7 @@ app.get('/api/content', passport.authenticate('token'), function(req, res){
 app.post('/api/content', passport.authenticate('token'), function(req, res) {
   if(req.body.text)
     ContentHelper.post(req.user._id, req.body.text);
+  res.json({success: true}); 
 });
 
 /* Router */
