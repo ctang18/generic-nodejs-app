@@ -37,8 +37,8 @@ ContentProvider.save = function(params, callback) {
     half       : params['half']
   });
   content.save(function(err){
-    console.log("Error: " + err);
-    callback(err);
+    if(err) { callback(err); }
+    callback(null);
   });
 };
 

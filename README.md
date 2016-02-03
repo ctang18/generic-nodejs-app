@@ -9,7 +9,6 @@ Generic NodeJS, Express, MongoDB setup for quick development.
 
 ## To Do
 - Change references of username to email
-- Move routing code to routes.js
 - Add posting to demo
 - Client and server side validation
 - Implement front-end framework (Backbone or Angular)

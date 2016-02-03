@@ -55,11 +55,11 @@
           if(result.success){
             $('#contents').html(renderContent(result.contents));
           } else {
-            console.log("GET request failed 1");
+            console.log("GET request failed 1: " + result.err);
           }
         })
         .fail(function(){
-          console.log("GET request failed");
+          console.log("GET request failed 2");
         });
     }
     
