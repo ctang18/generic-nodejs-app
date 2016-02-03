@@ -30,12 +30,58 @@
         <span id="post-iota-button" class="genericon genericon-plus hover-pink post-iota-button" onclick="postIotaBox()"></span>
         <span id="confirm-iota-button" class="hover-solid post-iota-button" onclick="confirmIota()"><strong>Save</strong></span>
       </div>   
-      <div class="contents">
+      <div class="contents" id="contents">
       </div><!-- contents -->'
       <br />
       <div class="loading hidden">loading content...</div>
     </div><!-- container -->'
   </body>
-  <script src="js/lib/jquery.min.js"></script>
-  <script src="js/index.js"></script>
+  <script src="static/js/lib/jquery.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <script>
+    var username = window.localStorage.getItem('username');
+    var token = window.localStorage.getItem('token');
+    if(!token || !username){
+      window.location.replace('/login');
+    } else {
+      $.ajaxSetup({
+        headers: { 
+          'x-username': username,
+          'x-token': token
+        }
+      });
+    }
+    
+    $(document).ready(function() { 
+      getContent();
+    });
+    
+    function getContent(){
+      $.get('api/content')
+        .done(function (result) {
+          if(result.success){
+            $('#contents').html(renderContent(result.contents));
+          } else {
+            console.log("GET request failed");
+          }
+        })
+        .fail(function(){
+          console.log("GET request failed");
+        });
+    }
+    
+    function renderContent(contents){
+      var contentHTML = '';
+      
+      for(i = 0; i < contents.length; i++){
+        if(contents[i].type == 'STRING'){
+          contentHTML += '<div class="content"> <div class="content-iota">' + contents[i].content + '</div> </div>';
+        } else if (contents[i].type == 'IMAGE'){
+          contentHTML += '<div class="image-screen"></div><img class="content-image" src="' + contents[i].content + '">';
+        }
+      }
+      
+      return contentHTML;
+    }
+  </script>
 </html>

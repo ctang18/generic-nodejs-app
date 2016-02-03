@@ -1,5 +1,5 @@
 # generic-nodejs-app
-Generic NodeJS, Express, MongoDB setup for quick development. Intended for personal use.
+Generic NodeJS, Express, MongoDB setup for quick development.
 
 ## Frameworks
 - Express
@@ -10,6 +10,8 @@ Generic NodeJS, Express, MongoDB setup for quick development. Intended for perso
 ## To Do
 - Move routing code to routes.js
 - Design a demo for display purposes
+- Client and server side validation
+- Implement front-end framework (Backbone or Angular)
 - Create a script that will build a project based on desired frameworks and technology (Backbone/Angular/None, MongoDB/MySQL, Cookies/Sessions/Tokens)
 
 ## Installation

@@ -28,13 +28,13 @@ function convertAndPostStringlet(userid, stringlet) {
   }
 }
 
-/*function postContent(content) {
+function postContent(content) {
   ContentProvider.save(content, function(err, todo) {
     if (err) {
       console.log(err);
     }
   });
-}*/
+}
 
 function isImage(stringlet) {
   if (stringlet.indexOf(".jpg") > -1 || stringlet.indexOf(".jpeg") > -1 || stringlet.indexOf(".gif") > -1 || stringlet.indexOf(".png") > -1)

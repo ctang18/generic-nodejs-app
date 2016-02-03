@@ -15,7 +15,7 @@
       </div>
       <br />
       <form class="login-form" action="login" method="post">
-        <input class="text-field" id="email" type="text" name="username" placeholder="EMAIL" required>
+        <input class="text-field" id="email" type="text" name="email" placeholder="EMAIL" required>
         <input class="text-field" id="password" type="password" name="password" placeholder="PASSWORD" required>
         <a href="#"><input type="submit" class="pink-button" value="login"></a>
       </form>
@@ -25,13 +25,25 @@
       </div>
     </div>
   </body>
-  <script src="static/js/external/jquery.min.js"></script>
+  <script src="static/js/lib/jquery.min.js"></script>
   <script src="static/js/util.js"></script>
   <script>
-    $(".login-form").submit(function(e) {      
-      if(!validateLogin($("#email").val(), $("#password").val())){
-        e.preventDefault();
-        return;
+    $(".login-form").submit(function(e) {            
+      e.preventDefault();
+      if(validateLogin($("#email").val(), $("#password").val())){
+        $.post('login', {
+          username: $("#email").val(),
+          password: $("#password").val()
+        }).done(function (result) {
+          if(result.success){
+            window.localStorage.setItem('username', $("#email").val())
+            window.localStorage.setItem('token', result.token)
+            window.location.replace('/');
+          } else {
+            $('#loginError').html(result.reason);
+            $('#loginError').css("visibility", "visible");
+          }
+        });
       }
     });
   </script>
