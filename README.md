@@ -8,6 +8,7 @@ Generic NodeJS, Express, MongoDB setup for quick development.
 - Jsonwebtoken
 
 ## To Do
+- Change references of username to email
 - Move routing code to routes.js
 - Design a demo for display purposes
 - Client and server side validation

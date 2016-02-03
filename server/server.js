@@ -6,7 +6,7 @@ var http = require('http').Server(app);
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var TokenStrategy = require('passport-token').Strategy;
@@ -26,30 +26,38 @@ app.use(passport.initialize());
 passport.use(new LocalStrategy(UserProvider.authenticate()));
 passport.serializeUser(UserProvider.serializeUser());
 passport.deserializeUser(UserProvider.deserializeUser());
+passport.use(new TokenStrategy(function (username, token, done) {
+  //Need to verify token
+  UserProvider.findOne({username: username}, function (err, user) {
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false);
+    }
+    return done(null, user);
+  });
+}));
 
 var minChar = 4;
 var maxChar = 20;
 
 /* API */
-app.get('/api/content', function(req, res){
+app.get('/api/content', passport.authenticate('token'), function(req, res){
   ContentProvider.findContents(req.user._id, function(err, contents){
     if (err)
       res.send(err)
-    res.json(contents); 
+    res.json({success: true, contents: contents}); 
   });
 });
 
-app.post('/api/content', function(req, res) {
-  
+app.post('/api/content', passport.authenticate('token'), function(req, res) {
+  //if(req.body.text)
+    ContentHelper.post(req.user._id, "Test");
 });
 
 /* Router */
 app.get('/', function(req, res){
-  /*if(req.user) {
-    res.sendFile('index.html');
-  } else {
-    res.redirect('/login');
-  }*/
   res.sendFile(path.join(__dirname + '/../client/index.html'));
 });
 
@@ -79,7 +87,7 @@ app.post('/login', function(req, res, next) {
     if (!user) {
       return res.json({success: false, reason: "Login Failed"});
     }
-    var token = jwt.encode({ 'username' : req.body.username }, c.jwtSecret);
+    var token = jwt.sign({ 'username' : req.body.username }, c.jwtSecret);
     res.json({success: true, token: token});
   })(req, res, next);
 });

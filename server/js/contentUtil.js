@@ -4,8 +4,9 @@ var ContentProvider = require('../models/content.js');
 var ContentPoster = function(){};
 
 /* Functions */
-ContentPoster.prototype.post = function(userid, stringlet) {
-  convertAndPostStringlet(userid, stringlet);
+ContentPoster.post = function(userid, stringlet) {
+  convertAndPostStringlet(userid, "Test");
+  convertAndPostStringlet(userid, "http://i.4cdn.org/sp/1454464610068.jpg");
 };
 
 /* Helper Functions */
@@ -31,7 +32,7 @@ function convertAndPostStringlet(userid, stringlet) {
 function postContent(content) {
   ContentProvider.save(content, function(err, todo) {
     if (err) {
-      console.log(err);
+      console.log("Error: " + err);
     }
   });
 }
@@ -43,4 +44,4 @@ function isImage(stringlet) {
     return false;
 }
 
-exports.ContentPoster = ContentPoster;
+module.exports = ContentPoster;

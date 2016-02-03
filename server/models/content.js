@@ -20,13 +20,13 @@ var contentSchema = new Schema({
 var Content = mongoose.model('Content', contentSchema);
 var ContentProvider = function(){};
 
-ContentProvider.prototype.findContents = function(userid, callback) {
+ContentProvider.findContents = function(userid, callback) {
   Content.find({ 'userid': userid }).sort({postdate: -1}).exec(function(err, contents) {
     callback(err, contents);
   });
 };
 
-ContentProvider.prototype.save = function(params, callback) {
+ContentProvider.save = function(params, callback) {
   var content  = new Content({
     userid     : params['userid'],
     content    : params['content'],
@@ -37,7 +37,7 @@ ContentProvider.prototype.save = function(params, callback) {
     half       : params['half']
   });
   content.save(function(err){
-    console.log(err);
+    console.log("Error: " + err);
     callback(err);
   });
 };
