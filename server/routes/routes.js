@@ -2,15 +2,13 @@ var express = require('express');
 var path = require('path');
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 
 var c = require('../config.json');
 var UserProvider = require('../models/user.js');
 
-passport.use(new LocalStrategy(UserProvider.authenticate()));
-
 module.exports = (function(){
   var router = express.Router();
+  
   router.get('/', function(req, res){
     res.sendFile(path.join(__dirname + '/../../client/index.html'));
   });
