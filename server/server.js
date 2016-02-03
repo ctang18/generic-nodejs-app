@@ -27,7 +27,6 @@ passport.use(new LocalStrategy(UserProvider.authenticate()));
 passport.serializeUser(UserProvider.serializeUser());
 passport.deserializeUser(UserProvider.deserializeUser());
 passport.use(new TokenStrategy(function (username, token, done) {
-  //Need to verify token
   UserProvider.findOne({username: username}, function (err, user) {
     if (err) {
       return done(err);
@@ -35,7 +34,13 @@ passport.use(new TokenStrategy(function (username, token, done) {
     if (!user) {
       return done(null, false);
     }
-    return done(null, user);
+    jwt.verify(token, c.jwtSecret, function(err, decoded) {
+      if (err) {
+        //Handle expired tokens
+        return done(null, false);
+      }
+        return done(null, user);
+    });
   });
 }));
 
@@ -52,8 +57,8 @@ app.get('/api/content', passport.authenticate('token'), function(req, res){
 });
 
 app.post('/api/content', passport.authenticate('token'), function(req, res) {
-  //if(req.body.text)
-    ContentHelper.post(req.user._id, "Test");
+  if(req.body.text)
+    ContentHelper.post(req.user._id, req.body.text);
 });
 
 /* Router */
