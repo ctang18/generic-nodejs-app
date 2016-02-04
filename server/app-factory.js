@@ -2,6 +2,7 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
+var path = require('path');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -41,7 +42,7 @@ passport.use(new TokenStrategy(function (username, token, done) {
 
 /* Routes */
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname + '/../../client/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/index.html'));
 });
 
 app.post('/register', registerMW);
