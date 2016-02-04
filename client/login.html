@@ -34,15 +34,15 @@
         $.post('login', {
           username: $("#email").val(),
           password: $("#password").val()
-        }).done(function (result) {
-          if(result.success){
-            window.localStorage.setItem('username', $("#email").val())
-            window.localStorage.setItem('token', result.token)
-            window.location.replace('/');
-          } else {
-            $('#loginError').html(result.reason);
-            $('#loginError').css("visibility", "visible");
-          }
+        })
+        .success(function (result) {
+          window.localStorage.setItem('username', $("#email").val());
+          window.localStorage.setItem('token', result.token);
+          window.location.replace('/');
+        })
+        .fail(function(result) {
+          $('#loginError').html(result.responseJSON.reason);
+          $('#loginError').css("visibility", "visible");
         });
       }
     });

@@ -5,12 +5,10 @@ var config = require('../config.json');
 function loginMW(req, res, next) {
   //TODO: Server side authentication
   passport.authenticate('local', { session: false }, function(err, user, info) {
-    if (err) { return res.json({success: false, reason: err}); }
-    if (!user) {
-      return res.json({success: false, reason: "Login Failed"});
-    }
+    if (err) { return res.status(500).json({ reason: "Resources are unavailable at this time" }); }
+    if (!user) { return res.status(401).json({ reason: "Invalid E-mail or Password" }); }
     var token = jwt.sign({ 'username' : req.body.username }, config.jwtSecret);
-    res.json({success: true, token: token});
+    res.status(200).json({ token: token });
   })(req, res, next);
 }
 

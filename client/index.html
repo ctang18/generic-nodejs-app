@@ -11,7 +11,7 @@
       <div class="header">
         <div class="header-right">
           <ul>
-            <li><a href="logout" class="hover-solid">logout</a></li>
+            <li><button class="hover-solid" id="logoutButton">logout</button></li>
           </ul>
         </div>
         <div class="header-center">
@@ -51,15 +51,11 @@
     
     function getContent(){
       $.get('api/content')
-        .done(function (result) {
-          if(result.success){
-            $('#contents').html(renderContent(result.contents));
-          } else {
-            console.log("GET request failed 1: " + result.err);
-          }
-        })
         .fail(function(){
           console.log("GET request failed 2");
+        })
+        .success(function (result) {
+          $('#contents').html(renderContent(result.contents));
         });
     }
     
@@ -75,15 +71,25 @@
       return contentHTML;
     }
     
-    $('#postButton').click(function (e) {
+    $('#postButton').click(function(e){
       var text = $('#postTextBox').val();
       
       e.preventDefault();
       $.post('api/content', {
         text: text
-      }).done(function (result) {
+      })
+      .success(function(result){
         window.location.replace('/');
+      })
+      .fail(function(result){
+        window.localStorage.clear();
+        window.location.replace('/login');
       });
+    });
+    
+    $('#logoutButton').click(function(e) {
+        window.localStorage.clear();
+        window.location.replace('/login');
     });
   </script>
 </html>

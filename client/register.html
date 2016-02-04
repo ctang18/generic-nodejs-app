@@ -32,7 +32,8 @@
         $.post('register', {
           email: $("#email").val(),
           password: $("#password").val()
-        }).done(function (result) {
+        })
+        .done(function (result) {
           if(result.success){
             window.location.replace('/');
           } else {

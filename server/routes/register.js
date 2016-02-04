@@ -5,11 +5,8 @@ function registerMW(req, res, next) {
 
   //TODO: Server side authentication
   UserProvider.register(userProvider, req.body.password, function(err, account) {
-    if (err) {
-      res.json({success: false, reason: err});
-    } else {
-      res.json({success: true});
-    }
+    if (err) { res.status(403).json({ reason: err }); } 
+    else { res.status(200); }
   });
 }
 

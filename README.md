@@ -9,8 +9,9 @@ Generic NodeJS, Express, MongoDB setup for quick development.
 
 ## To Do
 - Change references of username to email
-- Client and server side validation
-- Return status codes in JSON
+- Server side validation
+- Demo delete content function
+- Clean CSS
 - Implement testing suite (Chai/Mocha)
 - Implement front-end framework (Backbone or Angular)
 - Create a script that will build a project based on desired frameworks and technology (Backbone/Angular/None, MongoDB/MySQL, Cookies/Sessions/Tokens)

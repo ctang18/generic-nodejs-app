@@ -38,7 +38,7 @@ ContentProvider.save = function(params, callback) {
   });
   content.save(function(err){
     if(err) { callback(err); }
-    callback(null);
+    callback(null, content);
   });
 };
 

@@ -4,12 +4,15 @@ var ContentProvider = require('../models/content.js');
 var ContentPoster = function(){};
 
 /* Functions */
-ContentPoster.post = function(userid, stringlet) {
-  convertAndPostStringlet(userid, stringlet);
+ContentPoster.post = function(userid, stringlet, cb) {
+  convertAndPostStringlet(userid, stringlet, function(err, content) {
+    if (err) { cb(err); }
+    cb(null, content);
+  });
 };
 
 /* Helper Functions */
-function convertAndPostStringlet(userid, stringlet) {
+function convertAndPostStringlet(userid, stringlet, cb) {
   var data = {};
     
   if (isImage(stringlet)) {
@@ -17,22 +20,27 @@ function convertAndPostStringlet(userid, stringlet) {
     data.type = 'IMAGE';
     data.half = true;
     data.content = stringlet;
-    postContent(data);
+    postContent(data, function(err, content) {
+      if (err) { cb(err); }
+      cb(null, content);
+    });
   }
   else {
     data.userid = userid;
     data.type = 'STRING';
     data.half = false;
     data.content = decodeURI(stringlet);
-    postContent(data);
+    postContent(data, function(err, content) {
+      if (err) { cb(err); }
+      cb(null, content);
+    });
   }
 }
 
-function postContent(content) {
-  ContentProvider.save(content, function(err, todo) {
-    if (err) {
-      console.log("Error: " + err);
-    }
+function postContent(content, cb) {
+  ContentProvider.save(content, function(err, content) {
+    if (err) { cb(err); }
+    cb(null, content);
   });
 }
 

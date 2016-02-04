@@ -2,11 +2,11 @@ var ContentProvider = require('../../models/content.js');
 
 function getContentMW(req, res, next) {
   ContentProvider.findContents(req.user._id, function(err, contents){
-    if (err){
-      console.log("error" + err);
-      res.send(err)
+    if(err){ 
+      //TODO: Check err for status code to return
+      res.status(401); 
     }
-    res.json({success: true, contents: contents}); 
+    res.status(200).json({contents: contents}); 
   });
 }
 
