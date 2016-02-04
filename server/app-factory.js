@@ -10,10 +10,15 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var TokenStrategy = require('passport-token').Strategy;
 
-var c = require('./config.json');
+var config = require('./config.json');
 var UserProvider = require('./models/user.js');
-var routes = require('./routes/routes');
-var api = require('./routes/api');
+
+/* Middlewares */
+var registerMW = require('./routes/register');
+var loginMW = require('./routes/login');
+
+var getContentMW = require('./routes/api/content-get');
+var postContentMW = require('./routes/api/content-post');
 
 /* Configuration */
 app.use('/static', express.static(__dirname + '/../client'));
@@ -21,24 +26,29 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
-mongoose.connect((process.env.MONGOLAB_URI || c.mongoURI));
+mongoose.connect((process.env.MONGOLAB_URI || config.mongoURI));
 passport.use(new LocalStrategy(UserProvider.authenticate()));
 passport.use(new TokenStrategy(function (username, token, done) {
   UserProvider.findOne({ username: username }, function (err, user) {
     if (err) { return done(err); }
     if (!user) { return done(null, false); }
-    jwt.verify(token, c.jwtSecret, function(err, decoded) {
+    jwt.verify(token, config.jwtSecret, function(err, decoded) {
       if (err) { return done(null, false); }
       return done(null, user);
     });
   });
 }));
 
-/* Router */
-app.use('/api', passport.authenticate('token', { session: false }), api);
-app.use('/', routes);
-
-/* Listen */
-http.listen((process.env.PORT || c.port), function(){
-  console.log('listening on localhost:' + (process.env.PORT || c.port));
+/* Routes */
+app.get('/', function(req, res){
+  res.sendFile(path.join(__dirname + '/../../client/index.html'));
 });
+
+app.post('/register', registerMW);
+app.post('/login', loginMW);
+
+app.use('/api', passport.authenticate('token', { session: false }));
+app.get('/api/content', getContentMW);
+app.post('/api/content', postContentMW);
+
+module.exports = app;
