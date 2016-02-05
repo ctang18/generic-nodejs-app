@@ -23,7 +23,7 @@ var postContentMW = require('./routes/api/content-post');
 
 /* Configuration */
 app.use('/static', express.static(__dirname + '/../client'));
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());

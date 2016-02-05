@@ -18,15 +18,14 @@ var contentSchema = new Schema({
 
 /* Functions */
 var Content = mongoose.model('Content', contentSchema);
-var ContentProvider = function(){};
 
-ContentProvider.findContents = function(userid, callback) {
+Content.findContents = function(userid, callback) {
   Content.find({ 'userid': userid }).sort({postdate: -1}).exec(function(err, contents) {
     callback(err, contents);
   });
 };
 
-ContentProvider.save = function(params, callback) {
+Content.save = function(params, callback) {
   var content  = new Content({
     userid     : params['userid'],
     content    : params['content'],
@@ -42,4 +41,4 @@ ContentProvider.save = function(params, callback) {
   });
 };
 
-module.exports = ContentProvider;
+module.exports = Content

@@ -9,8 +9,9 @@ function postContentMW(req, res, next) {
     }
     res.status(200).json({ content: content }); 
     });
-  }
-  res.status(304); 
+  } else {
+    res.status(304).send(); 
+  } 
 }
 
 module.exports = postContentMW;
