@@ -135,6 +135,37 @@ describe('API', function() {
         done();
       });
   });
+  it('should 401 with wrong token on /api/content POST', function(done){
+    chai.request(server)
+      .post('/api/content')
+      .set('x-username', testAccount.username)
+      .set('x-token', 'wrongToken')
+      .end(function(err, res){
+        res.should.have.status(401);
+        done();
+      });
+  });
+  it('should 401 with wrong username on /api/content POST', function(done){
+    chai.request(server)
+      .post('/api/content')
+      .set('x-username', 'wrongUsername')
+      .set('x-token', testToken)
+      .end(function(err, res){
+        res.should.have.status(401);
+        done();
+      });
+  });
+  it('should 401 with wrong username/token combo on /api/content POST', function(done){
+    var validToken = jwt.sign('a', config.jwtSecret);
+    chai.request(server)
+      .post('/api/content')
+      .set('x-username', testAccount.username)
+      .set('x-token', validToken)
+      .end(function(err, res){
+        res.should.have.status(401);
+        done();
+      });
+  });
   it('should 304 sending nothing on /api/content POST', function(done){
     chai.request(server)
       .post('/api/content')
