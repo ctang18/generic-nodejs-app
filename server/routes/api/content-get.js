@@ -1,4 +1,4 @@
-var ContentProvider = require('../../models/content.js');
+var ContentProvider = require('../../models/content');
 
 function getContentMW(req, res, next) {
   ContentProvider.findContents(req.user._id, function(err, contents){

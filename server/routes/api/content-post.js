@@ -1,8 +1,8 @@
-var ContentHelper = require('../../util/contentutil.js');
+var ContentProvider = require('../../models/content');
 
 function postContentMW(req, res, next) {
   if(req.body.text){
-    ContentHelper.post(req.user._id, req.body.text, function(err, content){
+    ContentProvider.post(req.user._id, req.body.text, function(err, content){
     if(err){ 
       //TODO: Check err for status code to return
       res.status(401); 

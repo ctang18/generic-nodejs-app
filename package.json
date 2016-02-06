@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node main",
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha --recursive"
   },
   "dependencies": {
     "body-parser": "^1.14.2",

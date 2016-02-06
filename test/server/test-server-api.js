@@ -4,10 +4,10 @@ var should = chai.should();
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 
-var config = require('../server/config.json');
-var server = require('../server/app-factory');
-var User = require('../server/models/user');
-var Content = require('../server/models/content');
+var config = require('../../server/config.json');
+var server = require('../../server/app-factory');
+var User = require('../../server/models/user');
+var Content = require('../../server/models/content');
 
 chai.use(chaiHttp);
 
@@ -15,6 +15,9 @@ var testAccount;
 var testToken;
 
 describe('API', function() {
+  
+  User.collection.drop();
+  Content.collection.drop();
   
   beforeEach(function(done){
     User.register({ username: 'username@test.com' }, 'password', function(err, account) {
@@ -82,17 +85,6 @@ describe('API', function() {
         done();
       });
   });
-  it('should 401 with wrong username/token combo on /api/content GET', function(done){
-    var validToken = jwt.sign('a', config.jwtSecret);
-    chai.request(server)
-      .get('/api/content')
-      .set('x-username', testAccount.username)
-      .set('x-token', validToken)
-      .end(function(err, res){
-        res.should.have.status(401);
-        done();
-      });
-  });
   it('should POST new text based content on /api/content POST', function(done){
     chai.request(server)
       .post('/api/content')
@@ -135,7 +127,7 @@ describe('API', function() {
         done();
       });
   });
-  it('should 401 with wrong token on /api/content POST', function(done){
+  it('should 401 with invalid token on /api/content POST', function(done){
     chai.request(server)
       .post('/api/content')
       .set('x-username', testAccount.username)
@@ -150,17 +142,6 @@ describe('API', function() {
       .post('/api/content')
       .set('x-username', 'wrongUsername')
       .set('x-token', testToken)
-      .end(function(err, res){
-        res.should.have.status(401);
-        done();
-      });
-  });
-  it('should 401 with wrong username/token combo on /api/content POST', function(done){
-    var validToken = jwt.sign('a', config.jwtSecret);
-    chai.request(server)
-      .post('/api/content')
-      .set('x-username', testAccount.username)
-      .set('x-token', validToken)
       .end(function(err, res){
         res.should.have.status(401);
         done();

@@ -53,6 +53,7 @@ app.get('/login', function(req, res){
 app.get('/register', function(req, res){
   res.sendFile(path.join(__dirname + '/../client/register.html'));
 });
+/* End Temp Routes */
 
 app.post('/register', registerMW);
 app.post('/login', loginMW);
